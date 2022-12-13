@@ -1,7 +1,7 @@
 <template>
     <header>
         <img src="./assets/logo.svg" alt="Pinia">
-        <h1>{{ taskStore.name }}</h1>
+        <h1>{{ name }}</h1>
     </header>
     <div class="new-task-form">
         <AddTasks />
@@ -11,15 +11,15 @@
         <button @click="fillter = 'favs'">Fav Tasks</button>
     </div>
     <div class="task-list" v-if="fillter === 'all'">
-        <p>The number of tasks remaining is {{ taskStore.allCount }}</p>
-        <div v-for="tasks in taskStore.tasks">
-            <TaskDetails :task="tasks" />
+        <p>The number of tasks remaining is {{ allCount }}</p>
+        <div v-for="task in tasks">
+            <TaskDetails :task="task" />
         </div>
     </div>
     <div class="task-list" v-if="fillter === 'favs'">
-        <p>The number of fav tasks remaining is {{ taskStore.favCount }}</p>
-        <div v-for="tasks in taskStore.fav">
-            <TaskDetails :task="tasks" />
+        <p>The number of fav tasks remaining is {{ favCount }}</p>
+        <div v-for="favtasks in fav">
+            <TaskDetails :task="favtasks" />
         </div>
     </div>
 
@@ -30,6 +30,7 @@ import { useTaskStore } from './stores/TaskStore';
 import TaskDetails from './components/TaskDetails.vue';
 import AddTasks from './components/AddTask.vue';
 import { ref, onMounted, onUpdated } from 'vue';
+import { storeToRefs } from 'pinia';
 export default {
     components: { TaskDetails, AddTasks },
     setup() {
@@ -37,8 +38,9 @@ export default {
         onUpdated(() => taskStore.getTasks())
         const taskStore = useTaskStore();
         const fillter = ref('all');
+        const { tasks, name, fav, allCount, favCount } = storeToRefs(taskStore);
 
-        return { taskStore, fillter };
+        return { taskStore, fillter, tasks, name, fav, allCount, favCount };
     }
 }
 </script>
