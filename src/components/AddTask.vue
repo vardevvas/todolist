@@ -18,7 +18,6 @@ export default {
                 taskStore.addTask({
                     name: tasks.value,
                     isFav: false,
-                    id: Math.floor(Math.random() * 10000)
                 })
                 tasks.value = ""
             }

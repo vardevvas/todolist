@@ -4,10 +4,14 @@ export const useTaskStore = defineStore('taskStore', {
     state: () => ({
         tasks: [],
         name: "My Tasks",
+        search: ''
     }),
     getters: {
         fav() {
             return this.tasks.filter(t => t.isFav)
+        },
+        search() {
+            return this.tasks.filter(t => t.name.toLowerCase().includes(this.search))
         },
         favCount() {
             return this.tasks.reduce((p, c) => {
@@ -18,42 +22,28 @@ export const useTaskStore = defineStore('taskStore', {
             return state.tasks.length
         },
 
+
     },
     actions: {
         async getTasks() {
             const response = await axios.get('http://localhost:8080/tasks');
-            this.tasks = response.data;
-
+            response.statusText = 'OK' ? this.tasks = response.data : console.log(response.data);
         },
         async addTask(task) {
             const response = await axios.post('http://localhost:8080/addTask', task)
             console.log(response.data);
-            // this.tasks.push(task)
-
+            response.statusText = 'OK' ? this.getTasks() : console.log(response.data);
         },
         async deleteTask(id) {
-            axios.delete('http://localhost:8080/deleteTask/' + id).then(response => {
-                if (response.data === "TaskDeleted") {
-                    console.log(response.data);
-                    // const task = this.tasks.filter(t => t.id !== id)
-                    // this.tasks.pop(task)
-                }
-            })
-                .catch(function (error) {
-                    console.log(error.response)
-                })
+            const response = await axios.delete('http://localhost:8080/deleteTask/' + id)
+            console.log(response.data);
+            response.statusText = 'OK' ? this.getTasks() : console.log(response.data);
+
         },
         async toggleFav(id) {
-            axios.put('http://localhost:8080/toggleFav/' + id).then(response => {
-                if (response.data === "FavToggled") {
-                    console.log(response.data);
-                    // const task = this.tasks.find(t => t.id === id)
-                    // task.isFav = !task.isFav
-                }
-            })
-                .catch(function (error) {
-                    console.log(error.response)
-                })
-        },
+            const response = await axios.put('http://localhost:8080/toggleFav/' + id)
+            console.log(response.data);
+            response.statusText = 'OK' ? this.getTasks() : console.log(response.data);
+        }
     }
 })

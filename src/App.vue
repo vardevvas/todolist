@@ -29,13 +29,11 @@
 import { useTaskStore } from './stores/TaskStore';
 import TaskDetails from './components/TaskDetails.vue';
 import AddTasks from './components/AddTask.vue';
-import { ref, onMounted, onUpdated } from 'vue';
+import { ref } from 'vue';
 import { storeToRefs } from 'pinia';
 export default {
     components: { TaskDetails, AddTasks },
     setup() {
-        onMounted(() => taskStore.getTasks())
-        onUpdated(() => taskStore.getTasks())
         const taskStore = useTaskStore();
         const fillter = ref('all');
         const { tasks, name, fav, allCount, favCount } = storeToRefs(taskStore);
