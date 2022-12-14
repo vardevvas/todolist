@@ -12,6 +12,7 @@ import org.springframework.data.domain.Sort.Order;
 
 import spring.todolist.model.TaskModel;
 import spring.todolist.model.TaskRepo;
+import spring.todolist.utility.UtilityMethods;
 
 @Service
 public class TodoListService {
@@ -27,7 +28,7 @@ public class TodoListService {
 
     public String addTask(TaskModel task) {
         repoInstance.save(task);
-        return "Task Saved";
+        return "TaskSaved";
     }
 
     public String deleteTask(Long id) {
@@ -39,7 +40,6 @@ public class TodoListService {
         TaskModel task = repoInstance.getReferenceById(id);
         task.setIsFav(!task.getIsFav());
         repoInstance.save(task);
-
         return "FavToggled";
     }
 
