@@ -10,9 +10,6 @@ export const useTaskStore = defineStore('taskStore', {
         fav() {
             return this.tasks.filter(t => t.isFav)
         },
-        search() {
-            return this.tasks.filter(t => t.name.toLowerCase().includes(this.search))
-        },
         favCount() {
             return this.tasks.reduce((p, c) => {
                 return c.isFav ? p + 1 : p
@@ -21,8 +18,6 @@ export const useTaskStore = defineStore('taskStore', {
         allCount: (state) => {
             return state.tasks.length
         },
-
-
     },
     actions: {
         async getTasks() {

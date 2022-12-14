@@ -7,12 +7,14 @@
         <AddTasks />
     </div>
     <div class="filter">
+        <mat-icon matPrefix>search</mat-icon>
+        <input type="text" v-model="searchbox" class="search-input" placeholder="search by name...">
         <button @click="fillter = 'all'">All Tasks</button>
         <button @click="fillter = 'favs'">Fav Tasks</button>
     </div>
     <div class="task-list" v-if="fillter === 'all'">
-        <p>The number of tasks remaining is {{ allCount }}</p>
-        <div v-for="task in tasks">
+        <p> The number of tasks remaining is {{ allCount }}</p>
+        <div v-for="task in filteredTasks()">
             <TaskDetails :task="task" />
         </div>
     </div>
@@ -35,10 +37,15 @@ export default {
     components: { TaskDetails, AddTasks },
     setup() {
         const taskStore = useTaskStore();
+        taskStore.getTasks()
         const fillter = ref('all');
+        const searchbox = ref('')
         const { tasks, name, fav, allCount, favCount } = storeToRefs(taskStore);
-
-        return { taskStore, fillter, tasks, name, fav, allCount, favCount };
+        console.log(tasks.value);
+        function filteredTasks() {
+            return searchbox === '' ? tasks.value : tasks.value.filter(t => t.name.toLowerCase().includes(searchbox.value.toLowerCase()))
+        }
+        return { taskStore, fillter, tasks, name, fav, allCount, favCount, searchbox, filteredTasks };
     }
 }
 </script>
